@@ -22,15 +22,34 @@ class HomeController extends Controller
     }
 
     public function store(Request $req){
-        $home = new Home();
-        $home->name = $req->name;
-        $home->country = $req->country;
-        $home->total_games = $req->total_games;
-        $home->total_goals = $req->total_goals;
+        // validating the form
+        $req->validate([
+            'name' => 'required',
+            'country' => 'required',
+            'total_games' => 'required',
+            'total_goals' => 'required',
+            'image' => 'required',
+        ]);
 
-        $home->save();
+        $name = $req->name;
+        $country = $req->country;
+        $total_games = $req->total_games;
+        $total_goals = $req->total_goals;
+        $image = $req->file('image')->getClientOriginalName();
 
-        return redirect()->route('list');
+        // move uploaded file here
+        $req->image->move(public_path('images'), $image);
+
+        $player = new Home();
+        $player->name = $name;
+        $player->country = $country;
+        $player->total_games = $total_games;
+        $player->total_goals = $total_goals;
+        $player->image = $image;
+
+        $player->save();
+
+        return redirect('/')->with('success', 'Player added successfully');
     }
 
     public function edit($id){
@@ -54,20 +73,27 @@ class HomeController extends Controller
         $country = $req->country;
         $total_games = $req->total_games;
         $total_goals = $req->total_goals;
+        $image = $req->file('image')->getClientOriginalName();
+
+
+        // move uploaded file here
+
+        $req->image->move(public_path('images'), $image);
 
         Home::where('id', '=', $id)->update([
             'name' => $name,
             'country' => $country,
             'total_games' => $total_games,
             'total_goals' => $total_goals,
+            'image' => $image
         ]);
 
-        return redirect('/list')->with('success', 'Updated Successfully');
+        return redirect('/')->with('success', 'Updated Successfully');
     }
 
     public function delete($id){
         Home::where('id', "=", $id)->delete();
 
-        return redirect('/list')->with('success', 'Delete Successfully');
+        return redirect('/')->with('success', 'Delete Successfully');
     }
 }

@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('homes', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('country');
+            $table->bigInteger('total_games');
+            $table->bigInteger('total_goals');
+            $table->string('image');
             $table->timestamps();
         });
     }
