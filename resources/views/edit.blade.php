@@ -1,7 +1,8 @@
 @extends('dashboard')
 @section('content')
-<form action="{{route('update')}}" method="post">
+<form action="{{route('update')}}" method="post" enctype="multipart/form-data">
     @csrf
+    <input type="hidden" name="id" value="{{$homes->id}}">
 
     <div class="container m-5">
         <div class="row border ">
@@ -24,6 +25,16 @@
                 <label for="goal" class="mb-2 fs-2">Total Goal</label>
                 <input class="form-control py-3 mb-3" name="total_goals" placeholder="Total goal"
                     value="{{$homes->total_goals}}">
+            </div>
+
+            <div class="form-group ">
+                <label for="image" class="mb-2 fs-2">Player Image</label>
+                <input type="file" class="form-control py-3 mb-3" name="image" placeholder="Player Image">
+                @error('name')
+                <div class="alert alert-danger" role="alert">
+                    {{$message}}
+                </div>
+            @enderror
             </div>
             <div class="form-group ">
                 <button type="submit " class="btn btn-primary mb-2">Submit</button>
